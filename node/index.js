@@ -32,7 +32,7 @@ app.get('/now', function(req, res, next) {
 req.time= new Date().toString()
 next();
 }, function(req, res) {
-res.json({time:req.time});
+res.send({time:req.time});
 })
 
 app.listen(3000, function () {
