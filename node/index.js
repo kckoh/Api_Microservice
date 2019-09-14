@@ -13,6 +13,7 @@ app.get('/', middleware, function(req,res){
 });
 
 
+
 //read json and using .env practice
 app.get('/json', middleware, function (req, res) {
     var hello = "hello json"
@@ -33,6 +34,34 @@ req.time= new Date().toString()
 next();
 }, function(req, res) {
 res.send({time:req.time});
+})
+
+//Get Route Parameter Input from the Client
+app.get('/:word/echo', function(req,res){
+    var obj = {echo:req.params.word}
+    res.json(obj)
+})
+
+//Get Query Parameter Input from the Client
+app.get('/query', function(req,res){
+
+    if(req.query.first && req.query.last){
+        var obj = {name: req.query.first+ ' ' + req.query.last}
+        res.json(obj)
+    }
+    else{
+        res.send("/quer?first=firstname&last=lastname")
+    }
+}).post('/query', function(req,res){
+
+     if(req.query.first && req.query.last){
+        var obj = {name: req.query.first+ ' ' + req.query.last}
+        res.json(obj)
+    }
+    else{
+        res.send("/quer?first=firstname&last=lastname")
+    }
+
 })
 
 app.listen(3000, function () {
