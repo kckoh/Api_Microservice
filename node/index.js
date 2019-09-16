@@ -1,6 +1,9 @@
 var express = require('express');
 var app = express();
 require('dotenv').config()
+var bodyParser = require('body-parser')
+app.use(bodyParser.urlencoded({ extended: false }))
+
 
 //middleware practice
 middleware = (req,res, next) => {
@@ -63,6 +66,14 @@ app.get('/query', function(req,res){
     }
 
 })
+
+
+// post data
+app.post('/post', function (req, res) {
+    var user_id = req.body.id;
+    var password = req.body.password;
+    console.log(user_id, password)
+});
 
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!');
