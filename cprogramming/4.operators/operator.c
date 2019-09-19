@@ -8,7 +8,7 @@ void bin(unsigned n)
 
     /* step 2 */
     printf("%d", n % 2);
-} 
+}
 
 int main(){
     printf("Hello\n");
@@ -16,7 +16,7 @@ int main(){
     int a = 0b0011;
     int b = 13;
     /* and, or xor one's complement */
-    printf("%d\n", a);
+    printf("\n%p\n", &a);
     return 0;
 }
 
