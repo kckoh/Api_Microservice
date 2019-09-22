@@ -3,8 +3,6 @@ image:
 
 tasks:
   - command: >
-      cd emsdk  &&
-      ./emsdk install latest
 # List the ports you want to expose and what to do when they are served. See https://www.gitpod.io/docs/43_config_ports/
 ports:
 - port: 3000
