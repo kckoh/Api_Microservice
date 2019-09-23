@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Emscripten SDK
 
 [![CircleCI](https://circleci.com/gh/emscripten-core/emsdk/tree/master.svg?style=svg)](https://circleci.com/gh/emscripten-core/emsdk/tree/master)
@@ -276,3 +277,23 @@ installer:
 
 Snapshots of all tagged Emscripten compiler releases (not full SDKs) can be
 found at [emscripten/releases](https://github.com/kripken/emscripten/releases).
+=======
+# Api_Microservice
+https://learn.freecodecamp.org/apis-and-microservices/basic-node-and-express/get-route-parameter-input-from-the-client
+
+mongodb
+https://learn.freecodecamp.org/apis-and-microservices/mongodb-and-mongoose/create-a-model
+
+
+for c programming
+https://www.dummies.com/programming/c/basics-of-binary-for-c-programming/
+https://www.tutorialspoint.com/cprogramming/c_operators.htm
+
+string for c
+https://www.programiz.com/c-programming/c-strings
+
+mongodb
+mkdir -p /workspace/data && mongod --dbpath /workspace/data
+
+
+>>>>>>> 3d768bb2fa0c2e8e76644c00a04ac15d5d397b70
