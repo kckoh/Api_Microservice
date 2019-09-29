@@ -4,18 +4,30 @@ var app = express();
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 const dns = require('dns');
+var mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost/test', {useNewUrlParser: true});
+
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  console.log("connected")
+});
+
+var shortUrlSchema = new mongoose.Schema({
+  site: String,
+  url: Number
+});
+
+var shortUrl = mongoose.model('shortUrl', shortUrlSchema);
 
 var url;
 var obj;
 
 app.get('/', function (req, res) {
   res.send('Hello World!');
-  console.log(httparse("https://www.naver.com"))
 });
 
-app.get("/api/shorturl/1", (req,res) => {
-    res.send()
-})
 
 app.post("/api/shorturl/new", (req,res) => {
     url = httparse(req.body.url);
@@ -27,10 +39,10 @@ dns.lookup(url, (err, address) =>{
             res.redirect("/api/shorturl/new")
         }
         else{
+            var shorturls = new shortUrl({site: url, number  });
             obj = {"original_url": url, "short_url":545}
                 res.redirect("/api/shorturl/new")
-        }
-});
+        }});
 })
 
 app.get("/api/shorturl/new", (req,res) => {
