@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var autoIncrement = require('mongoose-auto-increment');
 mongoose.connect('mongodb://localhost/test', {useNewUrlParser: true});
 
 var db = mongoose.connection;
@@ -7,32 +8,20 @@ db.once('open', function() {
   // we're connected!
 });
 
+autoIncrement.initialize(db);
 
-var fruitSchema = new mongoose.Schema({
-    _id: Number,
-    fruit: String
+
+var colorSchema = new mongoose.Schema({
+    color: String
 }
 );
+colorSchema.plugin(autoIncrement.plugin, 'Color');
 
-var Fruit = mongoose.model("Fruit", fruitSchema);
+var Color = mongoose.model("Color", colorSchema);
 
-function getNextSequenceValue(sequenceName){
+var yello = new Color({color:"yello"})
 
-   var sequenceDocument = db.counters.findAndModify({
-      query:{_id: sequenceName },
-      update: {$inc:{sequence_value:1}},
-      new:true
-   });
-
-   return sequenceDocument.sequence_value;
-}
-
-
-db.fruits.insert({
-   "_id":getNextSequenceValue("productid"),
-   "fruit":"banana"
-})
-
+// yello.save((err) => {if (err) return handleError(err)} )
 
 //Save
 // bang.save(function(err) {

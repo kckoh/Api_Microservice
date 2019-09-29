@@ -5,7 +5,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 const dns = require('dns');
 var mongoose = require('mongoose');
-
+var autoIncrement = require('mongoose-auto-increment');
 mongoose.connect('mongodb://localhost/test', {useNewUrlParser: true});
 
 var db = mongoose.connection;
@@ -14,18 +14,22 @@ db.once('open', function() {
   console.log("connected")
 });
 
+autoIncrement.initialize(db);
+
 var shortUrlSchema = new mongoose.Schema({
-  site: String,
-  url: Number
+  site: String
 });
 
+shortUrlSchema.plugin(autoIncrement.plugin, 'shortUrl');
 var shortUrl = mongoose.model('shortUrl', shortUrlSchema);
+var addUrl = new shortUrl({site: "http://www.naver.com"})
 
 var url;
 var obj;
 
 app.get('/', function (req, res) {
   res.send('Hello World!');
+  addUrl - new shortUrl({})
 });
 
 

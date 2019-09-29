@@ -2,7 +2,3 @@ https://scotch.io/@deityhub/getting-started-with-the-mern-stack#toc-creating-the
 
 https://www.freecodecamp.org/news/create-a-react-frontend-a-node-express-backend-and-connect-them-together-c5798926047c/
 
-add mongodb
-search for the web if exists
-return the number
-if not add it to the database then return
