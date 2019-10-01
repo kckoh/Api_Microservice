@@ -4,53 +4,71 @@ var app = express();
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 const dns = require('dns');
-var mongoose = require('mongoose');
+
+
+var db = require("./database").db
+var mongoose = require("./database").mongoose
+
 var autoIncrement = require('mongoose-auto-increment');
-mongoose.connect('mongodb://localhost/test', {useNewUrlParser: true});
-
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
-  console.log("connected")
-});
-
 autoIncrement.initialize(db);
+
 
 var shortUrlSchema = new mongoose.Schema({
   site: String
 });
 
 shortUrlSchema.plugin(autoIncrement.plugin, 'shortUrl');
+
 var shortUrl = mongoose.model('shortUrl', shortUrlSchema);
-var addUrl = new shortUrl({site: "http://www.naver.com"})
 
 var url;
 var obj;
 
 app.get('/', function (req, res) {
   res.send('Hello World!');
-  addUrl - new shortUrl({})
 });
-
 
 app.post("/api/shorturl/new", (req,res) => {
     url = httparse(req.body.url);
     console.log(url)
 
-dns.lookup(url, (err, address) =>{
+dns.lookup(url, (err, address) => {
         if(err){
             obj = {error: "invalid"}
             res.redirect("/api/shorturl/new")
         }
         else{
-            var shorturls = new shortUrl({site: url, number  });
-            obj = {"original_url": url, "short_url":545}
-                res.redirect("/api/shorturl/new")
+            shortUrl.findOne({ 'site': req.body.url }, function (err, short) {
+                if (err) {
+                    console.log("error")
+                    var shorturls = new shortUrl({site: url});
+                    shorturls.save(function(err) {if (err) return handleError(err);} )
+                } ;
+
+                    obj = {"original_url": req.body.url, "short_url": short._id}
+                    res.redirect("/api/shorturl/new")
+                    console.log('the site name is: %s and id is %s.', short.site, short._id);
+                });
+
+
         }});
 })
 
 app.get("/api/shorturl/new", (req,res) => {
     res.json(obj)
+})
+
+// ---problem here dont know why but i will figure it out
+app.get("/api/shorturl/:id", (req,res) => {
+    shortUrl.find({_id:req.params.id}, function (err, short) {
+        if (err) {
+            obj = {error: "invalid"}
+            res.redirect("/api/shorturl/new")
+        };
+
+        console.log(req.params.id)
+
+    });
 })
 
 app.listen(3000, function () {
