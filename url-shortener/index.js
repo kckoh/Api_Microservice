@@ -16,25 +16,25 @@ var shortUrlSchema = new mongoose.Schema({
   site: String
 });
 
+//auto increment
 shortUrlSchema.plugin(autoIncrement.plugin, 'shortUrl');
 
+//global variables
 var shortUrl = mongoose.model('shortUrl', shortUrlSchema);
-
+var urlhttp;
 var url;
 var obj;
-var urlhttp;
 var id;
 
 app.get('/', function (req, res) {
   res.send('Hello World!');
 });
-var sites = "/api/shorturl/new";
+var sites
 
 app.post("/api/shorturl/new", (req,res) => {
     url = httparse(req.body.url);
     urlhttp = req.body.url
     console.log(url)
-
 dns.lookup(url, (err, address) => {
         if(err){
             obj = {error: "invalid"}
@@ -42,17 +42,19 @@ dns.lookup(url, (err, address) => {
         }
         else{
             //gotta fix this too to query style
-            shortUrl.findOne({ 'site': urlhttp}, function (err, short) {
-                if (err) {
-                    console.log("error")
-                    var shorturls = new shortUrl({site: url});
-                    shorturls.save(function(err) {if (err) return handleError(err);} )
-                }
 
-                    obj = {"original_url": req.body.url, "short_url": short._id}
+
+            var  queries  = shortUrl.findOne({ 'site': urlhttp});
+            var promise = queries.exec();
+            promise.then(function (doc) {
+         if(doc){
+             obj = {"original_url": req.body.url, "short_url": doc._id}
                     res.redirect("/api/shorturl/new")
-                    console.log('the site name is: %s and id is %s.', short.site, short._id);
-                });
+         }
+         else{
+            a();
+         }
+    });
 
 
         }});
@@ -63,31 +65,22 @@ app.get("/api/shorturl/new", (req,res) => {
 })
 
 // ---i gotta use async and await. understand these concepts
-app.get("/api/shorturl/:id", (req,res,next) =>{
-
-     var  querying  = shortUrl.where({ _id: req.params.id});
-     querying.findOne(function (err, short) {
-         if (err) {
-         return handleError(err);
+app.get("/api/shorturl/:id", (req,res) =>{
+    sites = "/api/shorturl/new";
+     var  query  = shortUrl.findOne({ _id: req.params.id});
+     var promise = query.exec();
+     promise.then(function (doc) {
+         if(doc){
+             console.log(doc)
+             res.redirect(doc.site)
          }
-         else {
-                 if (short) {
-         // doc may be null if no document matched
-            sites = short.site
-
-        }
-        else{
-            sites = "/api/shorturl/new"
-            }
+         else{
+             obj = {error: "invalid"}
+             res.redirect("/api/shorturl/new")
          }
+    });
 
 
-    }).then(res.redirect(sites) )
-    next()
-
-}, (req,res,next) => {
-    sites = "/api/shorturl/new"
-    next()
 })
 
 app.listen(3000, function () {
@@ -106,5 +99,19 @@ function httparse(strings){
     else{
         return strings;
     }
+}
+
+function a(){
+    var shorturls = new shortUrl({site: urlhttp});
+    shorturls.save(function(err) {if (err) return handleError(err);})
+
+    var  queries  = shortUrl.findOne({ 'site': urlhttp});
+            var promise = queries.exec();
+            promise.then(function (doc) {
+         if(doc){
+             obj = {"original_url": req.body.url, "short_url": doc._id}
+                    res.redirect("/api/shorturl/new")
+         }
+    });
 }
 
