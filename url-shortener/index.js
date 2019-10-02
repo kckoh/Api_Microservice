@@ -5,7 +5,6 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 const dns = require('dns');
 
-
 var db = require("./database").db
 var mongoose = require("./database").mongoose
 
@@ -63,31 +62,32 @@ app.get("/api/shorturl/new", (req,res) => {
     res.json(obj)
 })
 
-// ---problem here dont know why but i will figure it out
-app.get("/api/shorturl/:id", (req,res) => {
-    var querying  = shortUrl.where({ _id: req.params.id});
-    console.log(req.params.id)
-    //this is running last that is why the change is one behind how do i fix this lol
-    querying.findOne(function (err, short) {
-        if (err) {
-        return handleError(err);
-        }
-        else {
-                if (short) {
-            // doc may be null if no document matched
-            console.log(1)
+// ---i gotta use async and await. understand these concepts
+app.get("/api/shorturl/:id", (req,res,next) =>{
+
+     var  querying  = shortUrl.where({ _id: req.params.id});
+     querying.findOne(function (err, short) {
+         if (err) {
+         return handleError(err);
+         }
+         else {
+                 if (short) {
+         // doc may be null if no document matched
             sites = short.site
+
         }
         else{
-            console.log(2)
             sites = "/api/shorturl/new"
             }
-        }
+         }
 
-    });
-    console.log(sites)
-    res.redirect(sites)
 
+    }).then(res.redirect(sites) )
+    next()
+
+}, (req,res,next) => {
+    sites = "/api/shorturl/new"
+    next()
 })
 
 app.listen(3000, function () {
