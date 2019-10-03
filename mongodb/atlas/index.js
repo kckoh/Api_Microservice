@@ -1,11 +1,10 @@
+var express = require('express');
+var app = express();
 
-const MongoClient = require('mongodb').MongoClient;
-const uri = "mongodb+srv://dbUser:0987654q00@cluster0-vqhin.mongodb.net/admin?retryWrites=true&w=majority";
-const client = new MongoClient(uri, { useNewUrlParser: true });
-client.connect(err => {
-  const collection = client.db("test").collection("devices");
-  // perform actions on the collection object
-  client.close();
+app.get('/', function (req, res) {
+  res.send('Hello World!');
 });
 
-
+app.listen(3000, function () {
+  console.log('Example app listening on port 3000!');
+});

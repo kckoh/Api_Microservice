@@ -5,10 +5,11 @@
   "main": "index.js",
   "scripts": {
     "build": "next build"
-  }
+  },
   "author": "kc koh",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.17.1",
     "mongodb": "^3.3.2",
     "now": "^16.3.0"
   }
