@@ -1,0 +1,15 @@
+{
+  "name": "atlas",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "next build"
+  }
+  "author": "kc koh",
+  "license": "ISC",
+  "dependencies": {
+    "mongodb": "^3.3.2",
+    "now": "^16.3.0"
+  }
+}
