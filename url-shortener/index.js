@@ -5,14 +5,16 @@ app.use(bodyParser.urlencoded({
     extended: false
 }))
 app.use(bodyParser.json())
+
 const dns = require('dns');
 
+//db option
 var db = require("./database").db
 var mongoose = require("./database").mongoose
 
+//auto increment id
 var autoIncrement = require('mongoose-auto-increment');
 autoIncrement.initialize(db);
-
 
 var shortUrlSchema = new mongoose.Schema({
     site: String
@@ -29,16 +31,15 @@ var obj;
 var id;
 var sites
 
-//original page
+//home page
 app.get('/', function(req, res) {
-    res.render("index")
+    res.send("hello")
 });
 
-
+//post to this url
 app.post("/api/shorturl/new", (req, res) => {
     url = httparse(req.body.url);
-    urlhttp = req.body.url
-    console.log(url)
+    urlhttp = req.body.url;
     dns.lookup(url, (err, address) => {
         if (err) {
             obj = {
@@ -46,8 +47,8 @@ app.post("/api/shorturl/new", (req, res) => {
             }
             res.redirect("/api/shorturl/new")
         } else {
-            //gotta fix this too to query style
 
+            // query the
             var queries = shortUrl.findOne({
                 'site': urlhttp
             });
@@ -63,17 +64,16 @@ app.post("/api/shorturl/new", (req, res) => {
                     a();
                 }
             });
-
-
         }
     });
 })
 
+// default to find short url
 app.get("/api/shorturl/new", (req, res) => {
     res.json(obj)
 })
 
-// ---i gotta use async and await. understand these concepts
+// query the id if exists direct to the site else redirect to new
 app.get("/api/shorturl/:id", (req, res) => {
     sites = "/api/shorturl/new";
     var query = shortUrl.findOne({
@@ -82,7 +82,6 @@ app.get("/api/shorturl/:id", (req, res) => {
     var promise = query.exec();
     promise.then(function(doc) {
         if (doc) {
-            console.log(doc)
             res.redirect(doc.site)
         } else {
             obj = {
