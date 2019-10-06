@@ -6,7 +6,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 
 
 //middleware practice
-middleware = (req,res, next) => {
+middleware = (req, res, next) => {
     console.log(req.method, req.path, req.ip)
     next()
 }
@@ -14,8 +14,6 @@ middleware = (req,res, next) => {
 app.get('/', middleware, function(req,res){
     res.send("HelloWorld")
 });
-
-
 
 //read json and using .env practice
 app.get('/json', middleware, function (req, res) {
